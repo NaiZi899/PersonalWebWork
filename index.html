@@ -19,7 +19,7 @@
     <div class="max-w-4xl mx-auto">
         <header class="text-center mb-8">
             <h1 class="text-5xl font-bold text-indigo-600 cute-font mb-2">错没错？</h1>
-            <p class="text-gray-500">赛博审判 · 支持本地 AI 接入</p>
+            <p class="text-gray-500">赛博审判 · 专治不服</p>
         </header>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -40,34 +40,22 @@
                                 <select id="modelSelect" class="w-full p-2 border rounded-lg text-sm bg-gray-50">
                                     <option value="deepseek">DeepSeek-Chat</option>
                                     <option value="zhipu">智谱 GLM-4-Flash</option>
-                                    <option value="local">自定义本地模型 (OpenAI 协议)</option>
                                 </select>
                             </div>
                             <div id="apiKeySection">
                                 <label class="block text-xs text-gray-400 font-bold mb-1">API Key</label>
-                                <input type="password" id="customApiKey" class="w-full p-2 border rounded-lg text-sm" placeholder="Key (本地模型可不填)">
-                            </div>
-                        </div>
-
-                        <!-- 本地模型额外设置 -->
-                        <div id="localSettings" class="hidden grid grid-cols-2 gap-4 animate-fade-in">
-                            <div>
-                                <label class="block text-xs text-indigo-400 font-bold mb-1">本地接口地址 (Base URL)</label>
-                                <input type="text" id="baseUrlInput" class="w-full p-2 border border-indigo-100 rounded-lg text-sm" placeholder="http://localhost:11434/v1">
-                            </div>
-                            <div>
-                                <label class="block text-xs text-indigo-400 font-bold mb-1">模型名称 (Model ID)</label>
-                                <input type="text" id="localModelName" class="w-full p-2 border border-indigo-100 rounded-lg text-sm" placeholder="qwen2 / llama3">
+                                <input type="password" id="customApiKey" class="w-full p-2 border rounded-lg text-sm" placeholder="输入对应平台的 API Key">
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div id="loadingArea" class="hidden text-center py-4 bg-yellow-50 rounded-2xl border-2 border-yellow-200">
-                    <span class="text-yellow-700 font-bold">本地法官正在热身<span class="loading-dots"></span></span>
+                    <span class="text-yellow-700 font-bold">法官们正在激烈辩论中<span class="loading-dots"></span></span>
                 </div>
 
                 <div id="resultsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4 hidden">
+                    <!-- 四位法官卡片 -->
                     <div id="card-elder" class="bg-red-50 p-4 bubble-card border-2 border-red-100">
                         <div class="font-bold text-red-800 mb-1">👴 老古板</div>
                         <p class="text-xs text-gray-600 italic h-16 overflow-y-auto personality-comment"></p>
@@ -105,12 +93,14 @@
                     </div>
                     <button id="clearHistory" class="mt-2 text-[10px] text-red-300 hover:text-red-500 underline">清空记录</button>
                 </div>
-                <div class="p-4 bg-indigo-50 rounded-2xl border border-indigo-100 text-[10px] text-indigo-400">
-                    <p class="font-bold mb-1">本地部署提示：</p>
-                    <p>如果使用 Ollama，请确保设置了环境变量：<br><b>OLLAMA_ORIGINS="*"</b><br>否则浏览器会因为 CORS 拦截请求。</p>
-                </div>
             </div>
         </div>
+
+        <!-- 页脚免责声明 -->
+        <footer class="mt-12 mb-8 text-center text-gray-400 text-xs space-y-2">
+            <p>免责声明：本页面审判结果由 AI 随机生成，仅供娱乐及调侃，不代表真实的法律建议或道德准则。</p>
+            <p class="cute-font text-sm text-indigo-300">By Naizi</p>
+        </footer>
     </div>
 
     <script>
@@ -118,17 +108,7 @@
             const judgeBtn = document.getElementById('judgeBtn');
             const situationInput = document.getElementById('situationInput');
             const modelSelect = document.getElementById('modelSelect');
-            const localSettings = document.getElementById('localSettings');
             const historyList = document.getElementById('historyList');
-
-            // 切换本地设置面板显示
-            modelSelect.addEventListener('change', () => {
-                if (modelSelect.value === 'local') {
-                    localSettings.classList.remove('hidden');
-                } else {
-                    localSettings.classList.add('hidden');
-                }
-            });
 
             function loadHistory() {
                 const saved = JSON.parse(localStorage.getItem('court_history') || '[]');
@@ -163,25 +143,14 @@
             async function askAI(p, input, modelType, key) {
                 const sys = `你是【${p.name}】。${p.prompt}。严格输出JSON {"score": 0-100, "comment": "..."}。`;
                 
-                let url, modelName;
-                
-                if (modelType === 'local') {
-                    url = document.getElementById('baseUrlInput').value.trim() || 'http://localhost:11434/v1';
-                    // 补全路径
-                    if (!url.endsWith('/chat/completions')) {
-                        url = url.endsWith('/') ? url + 'chat/completions' : url + '/chat/completions';
-                    }
-                    modelName = document.getElementById('localModelName').value.trim() || 'qwen2';
-                } else {
-                    url = modelType === 'deepseek' ? "https://api.deepseek.com/chat/completions" : "https://open.bigmodel.cn/api/paas/v4/chat/completions";
-                    modelName = modelType === 'deepseek' ? "deepseek-chat" : "glm-4-flash";
-                }
+                const url = modelType === 'deepseek' ? "https://api.deepseek.com/chat/completions" : "https://open.bigmodel.cn/api/paas/v4/chat/completions";
+                const modelName = modelType === 'deepseek' ? "deepseek-chat" : "glm-4-flash";
 
                 const resp = await fetch(url, {
                     method: 'POST',
                     headers: { 
                         'Content-Type': 'application/json', 
-                        'Authorization': `Bearer ${key || 'no-key'}` 
+                        'Authorization': `Bearer ${key}` 
                     },
                     body: JSON.stringify({
                         model: modelName,
@@ -200,7 +169,7 @@
                 const type = modelSelect.value;
 
                 if (!text) return alert("请输入案情！");
-                if (type !== 'local' && !key) return alert("请输入 API Key！");
+                if (!key) return alert("请输入 API Key！");
 
                 judgeBtn.disabled = true;
                 document.getElementById('loadingArea').classList.remove('hidden');
@@ -219,7 +188,15 @@
                     });
 
                     const avg = Math.round(total / 4);
-                    document.getElementById('verdictText').innerText = avg > 70 ? "法庭判定：你没错！" : (avg > 40 ? "法庭判定：有待商榷。" : "法庭判定：纯纯的错。");
+                    const isVague = text.length < 5 || text.includes("我错了吗");
+                    
+                    if (isVague) {
+                        document.getElementById('verdictHeader').innerText = "❓ 赛博废话";
+                        document.getElementById('verdictText').innerText = "法官们面面相觑，建议提供更多细节后再来审判。";
+                    } else {
+                        document.getElementById('verdictHeader').innerText = avg > 70 ? "🌟 问心无愧" : (avg > 40 ? "🤔 很难评" : "❌ 纯纯的错");
+                        document.getElementById('verdictText').innerText = avg > 70 ? "你是对的，继续坚持你的原则！" : "大家的意见很大，建议你反思一下。";
+                    }
                     
                     const history = JSON.parse(localStorage.getItem('court_history') || '[]');
                     history.unshift({ text, score: avg, time: Date.now() });
@@ -230,7 +207,7 @@
                     document.getElementById('resultsGrid').classList.remove('hidden');
                     document.getElementById('finalVerdict').classList.remove('hidden');
                 } catch (err) {
-                    alert("错误: " + err.message + "\n请检查本地 AI 是否开启及 CORS 设置。");
+                    alert("错误: " + err.message);
                 } finally {
                     judgeBtn.disabled = false;
                     document.getElementById('loadingArea').classList.add('hidden');
