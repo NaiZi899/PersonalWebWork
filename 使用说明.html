@@ -1,0 +1,157 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        @page {
+            size: A4;
+            margin: 20mm;
+            background-color: #fafafa;
+        }
+        body {
+            font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+            line-height: 1.6;
+            color: #444;
+            margin: 0;
+            padding: 0;
+            background-color: #fafafa;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+        }
+        header {
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        h1 {
+            font-size: 22pt;
+            color: #333;
+            margin: 0;
+        }
+        h2 {
+            font-size: 15pt;
+            color: #555;
+            border-left: 5px solid #d1d1d1;
+            padding-left: 12px;
+            margin-top: 30px;
+        }
+        h3 {
+            font-size: 12pt;
+            color: #666;
+            margin-top: 20px;
+        }
+        p, li {
+            font-size: 10.5pt;
+        }
+        .card {
+            background: #ffffff;
+            border: 1px solid #e8e8e8;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .download-box {
+            background-color: #f0f0f0;
+            border: 1px dashed #ccc;
+            padding: 15px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .download-box a {
+            color: #444;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .step-num {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            background: #888;
+            color: #fff;
+            text-align: center;
+            line-height: 20px;
+            border-radius: 50%;
+            font-size: 9pt;
+            margin-right: 8px;
+        }
+        .highlight {
+            color: #444;
+            font-weight: bold;
+            background: #f0f7f0;
+            padding: 0 4px;
+        }
+        .disclaimer {
+            margin-top: 50px;
+            padding: 15px;
+            border-top: 1px solid #eee;
+            font-size: 9.5pt;
+            color: #888;
+            text-align: center;
+        }
+        footer {
+            margin-top: 20px;
+            font-size: 9pt;
+            color: #aaa;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>AI 答题辅助插件使用手册</h1>
+        </header>
+
+        <section>
+            <h2>1. 工具定位</h2>
+            <p>本工具采用了纯净辅助模式：</p>
+            <ul>
+                <li><strong>非侵入式：</strong> 仅读取题目与选项，不触发任何自动点击行为。</li>
+                <li><strong>纯辅助化：</strong> AI 提供逻辑判断参考，最终决策由人工完成。</li>
+                <li><strong>适配布局：</strong> 灰白配色方案，视觉风格贴近传统卷面。</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>2. 资源获取</h2>
+            <div class="download-box">
+                <p><strong>下载地址：</strong> <a href="https://wwbtw.lanzouu.com/ipxoW3o3hskb">https://wwbtw.lanzouu.com/ipxoW3o3hskb</a></p>
+                <p><strong>提取密码：</strong> ah29</p>
+            </div>
+        </section>
+
+        <section>
+            <h2>3. 部署流程</h2>
+            <div class="card">
+                <h3><span class="step-num">1</span> 环境准备</h3>
+                <p>在 Tampermonkey 扩展中新建脚本，导入获取到的代码并保存。</p>
+                
+                <h3><span class="step-num">2</span> 密钥配置</h3>
+                <p>刷新页面后点击右下角灰色 <strong>AI</strong> 按钮，填入您的 API 密钥（KEY）并点击保存。</p>
+            </div>
+        </section>
+
+        <section>
+            <h2>4. 使用说明</h2>
+            <p>脚本运行后将实时监控页面题目状态：</p>
+            <ul>
+                <li><strong>题目识别：</strong> 自动抓取当前显示的题目文本。</li>
+                <li><strong>建议展示：</strong> 日志面板中会成对显示 <code>Q (问题)</code> 与 <code class="highlight">A (AI 建议答案)</code>。</li>
+            </ul>
+            <p><strong>操作提醒：</strong> 本插件不会执行自动点击，请在看到建议答案后，手动勾选对应的选项并点击提交。</p>
+        </section>
+
+        <div class="disclaimer">
+            <p>仅供学术交流与自动化工具开发研究使用，禁止用于考试作弊等违法行为，使用者的一切行为与开发者无关</p>
+        </div>
+
+        <footer>
+            <p>By Naizi - 技术研究专用文档</p>
+        </footer>
+    </div>
+</body>
+</html>
